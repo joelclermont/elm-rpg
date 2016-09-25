@@ -154,8 +154,8 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    collage 800
-        800
+    collage 500
+        400
         [ drawMap model.map ( model.player.x, model.player.y )
         , drawPlayer model.player
         ]
@@ -164,7 +164,7 @@ view model =
 
 drawPlayer : Player -> Form
 drawPlayer player =
-    filled blue (rect 32 48)
+    filled (Color.rgb 0 255 255) (rect 32 48)
 
 
 drawMap : Map -> ( Int, Int ) -> Form

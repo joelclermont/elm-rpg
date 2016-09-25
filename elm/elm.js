@@ -12120,7 +12120,7 @@ var _ohanhi$keyboard_extra$Keyboard_Extra$pressedDown = function (model) {
 var _user$project$Main$drawPlayer = function (player) {
 	return A2(
 		_evancz$elm_graphics$Collage$filled,
-		_elm_lang$core$Color$blue,
+		A3(_elm_lang$core$Color$rgb, 0, 255, 255),
 		A2(_evancz$elm_graphics$Collage$rect, 32, 48));
 };
 var _user$project$Main$tileHeight = 32;
@@ -12171,8 +12171,8 @@ var _user$project$Main$view = function (model) {
 	return _evancz$elm_graphics$Element$toHtml(
 		A3(
 			_evancz$elm_graphics$Collage$collage,
-			800,
-			800,
+			500,
+			400,
 			_elm_lang$core$Native_List.fromArray(
 				[
 					A2(
