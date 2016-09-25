@@ -61,17 +61,31 @@ init =
     let
         ( keyboardModel, keyboardCmd ) =
             Keyboard.Extra.init
+
+        mapWidth =
+            100
+
+        mapHeight =
+            100
+
+        initialPlayerX =
+            0
+
+        initialPlayerY =
+            0
+
+        initialPlayerSpeed =
+            2
     in
-        ( { player = Player 0 0 5
-          , map = Map 100 100 [ [ WaterTile ] ]
-          , keyboardModel =
-                keyboardModel
+        ( { player = Player initialPlayerX initialPlayerY initialPlayerSpeed
+          , map = Map mapWidth mapHeight []
+          , keyboardModel = keyboardModel
           }
         , Cmd.batch
             [ Cmd.map KeyboardExtraMsg keyboardCmd
             , Random.generate LoadMap
-                (Random.list 50
-                    (Random.list 50
+                (Random.list mapHeight
+                    (Random.list mapWidth
                         (Random.map
                             (\n ->
                                 case n of

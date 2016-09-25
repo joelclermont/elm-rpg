@@ -12206,22 +12206,24 @@ var _user$project$Main$KeyboardExtraMsg = function (a) {
 	return {ctor: 'KeyboardExtraMsg', _0: a};
 };
 var _user$project$Main$init = function () {
+	var initialPlayerSpeed = 2;
+	var initialPlayerY = 0;
+	var initialPlayerX = 0;
+	var mapHeight = 100;
+	var mapWidth = 100;
 	var _p3 = _ohanhi$keyboard_extra$Keyboard_Extra$init;
 	var keyboardModel = _p3._0;
 	var keyboardCmd = _p3._1;
 	return {
 		ctor: '_Tuple2',
 		_0: {
-			player: A3(_user$project$Main$Player, 0, 0, 5),
+			player: A3(_user$project$Main$Player, initialPlayerX, initialPlayerY, initialPlayerSpeed),
 			map: A3(
 				_user$project$Main$Map,
-				100,
-				100,
+				mapWidth,
+				mapHeight,
 				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$core$Native_List.fromArray(
-						[_user$project$Main$WaterTile])
-					])),
+					[])),
 			keyboardModel: keyboardModel
 		},
 		_1: _elm_lang$core$Platform_Cmd$batch(
@@ -12233,10 +12235,10 @@ var _user$project$Main$init = function () {
 					_user$project$Main$LoadMap,
 					A2(
 						_elm_lang$core$Random$list,
-						50,
+						mapHeight,
 						A2(
 							_elm_lang$core$Random$list,
-							50,
+							mapWidth,
 							A2(
 								_elm_lang$core$Random$map,
 								function (n) {
