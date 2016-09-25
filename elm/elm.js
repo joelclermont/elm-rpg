@@ -12196,6 +12196,25 @@ var _user$project$Main$Map = F3(
 	});
 var _user$project$Main$GrassTile = {ctor: 'GrassTile'};
 var _user$project$Main$WaterTile = {ctor: 'WaterTile'};
+var _user$project$Main$mapIntToTile = function (n) {
+	var _p3 = n;
+	if (_p3 === 0) {
+		return _user$project$Main$WaterTile;
+	} else {
+		return _user$project$Main$GrassTile;
+	}
+};
+var _user$project$Main$tileGenerator = A2(
+	_elm_lang$core$Random$map,
+	_user$project$Main$mapIntToTile,
+	A2(_elm_lang$core$Random$int, 0, 1));
+var _user$project$Main$mapGenerator = F2(
+	function (width, height) {
+		return A2(
+			_elm_lang$core$Random$list,
+			height,
+			A2(_elm_lang$core$Random$list, width, _user$project$Main$tileGenerator));
+	});
 var _user$project$Main$LoadMap = function (a) {
 	return {ctor: 'LoadMap', _0: a};
 };
@@ -12211,9 +12230,9 @@ var _user$project$Main$init = function () {
 	var initialPlayerX = 0;
 	var mapHeight = 100;
 	var mapWidth = 100;
-	var _p3 = _ohanhi$keyboard_extra$Keyboard_Extra$init;
-	var keyboardModel = _p3._0;
-	var keyboardCmd = _p3._1;
+	var _p4 = _ohanhi$keyboard_extra$Keyboard_Extra$init;
+	var keyboardModel = _p4._0;
+	var keyboardCmd = _p4._1;
 	return {
 		ctor: '_Tuple2',
 		_0: {
@@ -12233,23 +12252,7 @@ var _user$project$Main$init = function () {
 					A2(
 					_elm_lang$core$Random$generate,
 					_user$project$Main$LoadMap,
-					A2(
-						_elm_lang$core$Random$list,
-						mapHeight,
-						A2(
-							_elm_lang$core$Random$list,
-							mapWidth,
-							A2(
-								_elm_lang$core$Random$map,
-								function (n) {
-									var _p4 = n;
-									if (_p4 === 0) {
-										return _user$project$Main$WaterTile;
-									} else {
-										return _user$project$Main$GrassTile;
-									}
-								},
-								A2(_elm_lang$core$Random$int, 0, 1)))))
+					A2(_user$project$Main$mapGenerator, mapWidth, mapHeight))
 				]))
 	};
 }();

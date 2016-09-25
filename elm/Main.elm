@@ -83,24 +83,29 @@ init =
           }
         , Cmd.batch
             [ Cmd.map KeyboardExtraMsg keyboardCmd
-            , Random.generate LoadMap
-                (Random.list mapHeight
-                    (Random.list mapWidth
-                        (Random.map
-                            (\n ->
-                                case n of
-                                    0 ->
-                                        WaterTile
-
-                                    _ ->
-                                        GrassTile
-                            )
-                            (Random.int 0 1)
-                        )
-                    )
-                )
+            , Random.generate LoadMap <| mapGenerator mapWidth mapHeight
             ]
         )
+
+
+mapGenerator : Int -> Int -> Random.Generator (List (List Tile))
+mapGenerator width height =
+    Random.list height <| Random.list width tileGenerator
+
+
+tileGenerator : Random.Generator Tile
+tileGenerator =
+    Random.map mapIntToTile (Random.int 0 1)
+
+
+mapIntToTile : Int -> Tile
+mapIntToTile n =
+    case n of
+        0 ->
+            WaterTile
+
+        _ ->
+            GrassTile
 
 
 
