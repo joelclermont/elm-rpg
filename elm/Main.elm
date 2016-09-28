@@ -1,14 +1,13 @@
 module Main exposing (..)
 
-import Color exposing (..)
-import Collage exposing (..)
-import Element exposing (..)
-import Html exposing (..)
+import Html exposing (Html)
 import Html.App as App
 import Keyboard.Extra
 import Random
 import AnimationFrame
 import Time exposing (Time)
+import Svg exposing (..)
+import Svg.Attributes exposing (..)
 
 
 -- MODEL
@@ -85,7 +84,7 @@ init =
             0.0
 
         initialPlayerSpeed =
-            2.0
+            3.0
     in
         ( { player = Player initialPlayerX initialPlayerY initialPlayerSpeed
           , map = Map mapWidth mapHeight []
@@ -164,45 +163,57 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    collage 500
-        400
+    svg
+        [ version "1.1", x "0", y "0", width "500", height "400" ]
         [ drawMap model.map ( model.player.x, model.player.y )
         , drawPlayer model.player
-        , filled white (rect 2 2)
         ]
-        |> Element.toHtml
 
 
-drawPlayer : Player -> Form
+drawPlayer : Player -> Svg msg
 drawPlayer player =
-    filled (Color.rgb 0 255 255) (rect playerWidth playerHeight)
+    rect [ fill "#00FFFF", x "0", y "0", width (toString playerWidth), height (toString playerHeight) ] []
 
 
-drawMap : Map -> ( Float, Float ) -> Form
+drawMap : Map -> ( Float, Float ) -> Svg msg
 drawMap map ( x, y ) =
     let
         moveMapX =
-            x
+            (negate x)
 
         moveMapY =
             y - (map.height * tileHeight) + playerHeight
     in
-        move ( moveMapX, moveMapY ) (group (List.indexedMap drawMapRow map.tiles))
+        g [ transform ("translate(" ++ (toString moveMapX) ++ "," ++ (toString moveMapY) ++ ")") ] (List.indexedMap drawMapRow map.tiles)
 
 
-drawMapRow : Int -> List Tile -> Form
+drawMapRow : Int -> List Tile -> Svg msg
 drawMapRow y row =
-    moveY (toFloat y * tileHeight) (group (List.indexedMap drawMapTile row))
+    g [] (List.indexedMap (drawMapTile y) row)
 
 
-drawMapTile : Int -> Tile -> Form
-drawMapTile x tile =
+drawMapTile : Int -> Int -> Tile -> Svg msg
+drawMapTile yPos xPos tile =
     case tile of
         WaterTile ->
-            moveX (toFloat x * tileWidth) (filled (Color.rgb 0 0 255) (rect tileWidth tileHeight))
+            rect
+                [ fill "#0000FF"
+                , x (toString (toFloat xPos * tileWidth))
+                , y (toString (toFloat yPos * tileHeight))
+                , width (toString tileWidth)
+                , height (toString tileHeight)
+                ]
+                []
 
         GrassTile ->
-            moveX (toFloat x * tileWidth) (filled (Color.rgb 0 255 0) (rect tileWidth tileHeight))
+            rect
+                [ fill "#00FF00"
+                , x <| toString (toFloat xPos * tileWidth)
+                , y <| toString (toFloat yPos * tileHeight)
+                , width (toString tileWidth)
+                , height (toString tileHeight)
+                ]
+                []
 
 
 
