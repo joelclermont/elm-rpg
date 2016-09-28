@@ -22,15 +22,15 @@ type alias Model =
 
 
 type alias Player =
-    { x : Int
-    , y : Int
-    , speed : Int
+    { x : Float
+    , y : Float
+    , speed : Float
     }
 
 
 type alias Map =
-    { width : Int
-    , height : Int
+    { width : Float
+    , height : Float
     , tiles : List (List Tile)
     }
 
@@ -56,6 +56,16 @@ tileHeight =
     32
 
 
+playerWidth : Float
+playerWidth =
+    32
+
+
+playerHeight : Float
+playerHeight =
+    48
+
+
 init : ( Model, Cmd Msg )
 init =
     let
@@ -69,13 +79,13 @@ init =
             100
 
         initialPlayerX =
-            0
+            0.0
 
         initialPlayerY =
-            0
+            0.0
 
         initialPlayerSpeed =
-            2
+            2.0
     in
         ( { player = Player initialPlayerX initialPlayerY initialPlayerSpeed
           , map = Map mapWidth mapHeight []
@@ -133,7 +143,7 @@ update msg model =
                     model.player
 
                 newPlayer =
-                    { oldPlayer | x = oldPlayer.x + (x * oldPlayer.speed), y = oldPlayer.y + (y * oldPlayer.speed) }
+                    { oldPlayer | x = oldPlayer.x + ((toFloat x) * oldPlayer.speed), y = oldPlayer.y + ((toFloat y) * oldPlayer.speed) }
             in
                 { model | player = newPlayer } ! []
 
@@ -158,18 +168,26 @@ view model =
         400
         [ drawMap model.map ( model.player.x, model.player.y )
         , drawPlayer model.player
+        , filled white (rect 2 2)
         ]
         |> Element.toHtml
 
 
 drawPlayer : Player -> Form
 drawPlayer player =
-    filled (Color.rgb 0 255 255) (rect 32 48)
+    filled (Color.rgb 0 255 255) (rect playerWidth playerHeight)
 
 
-drawMap : Map -> ( Int, Int ) -> Form
+drawMap : Map -> ( Float, Float ) -> Form
 drawMap map ( x, y ) =
-    move ( toFloat x, toFloat y ) (group (List.indexedMap drawMapRow map.tiles))
+    let
+        moveMapX =
+            x
+
+        moveMapY =
+            y - (map.height * tileHeight) + playerHeight
+    in
+        move ( moveMapX, moveMapY ) (group (List.indexedMap drawMapRow map.tiles))
 
 
 drawMapRow : Int -> List Tile -> Form

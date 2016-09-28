@@ -12117,11 +12117,13 @@ var _ohanhi$keyboard_extra$Keyboard_Extra$pressedDown = function (model) {
 		_elm_lang$core$Set$toList(model.keysDown));
 };
 
+var _user$project$Main$playerHeight = 48;
+var _user$project$Main$playerWidth = 32;
 var _user$project$Main$drawPlayer = function (player) {
 	return A2(
 		_evancz$elm_graphics$Collage$filled,
 		A3(_elm_lang$core$Color$rgb, 0, 255, 255),
-		A2(_evancz$elm_graphics$Collage$rect, 32, 48));
+		A2(_evancz$elm_graphics$Collage$rect, _user$project$Main$playerWidth, _user$project$Main$playerHeight));
 };
 var _user$project$Main$tileHeight = 32;
 var _user$project$Main$tileWidth = 32;
@@ -12157,13 +12159,11 @@ var _user$project$Main$drawMapRow = F2(
 var _user$project$Main$drawMap = F2(
 	function (map, _p1) {
 		var _p2 = _p1;
+		var moveMapY = (_p2._1 - (map.height * _user$project$Main$tileHeight)) + _user$project$Main$playerHeight;
+		var moveMapX = _p2._0;
 		return A2(
 			_evancz$elm_graphics$Collage$move,
-			{
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Basics$toFloat(_p2._0),
-				_1: _elm_lang$core$Basics$toFloat(_p2._1)
-			},
+			{ctor: '_Tuple2', _0: moveMapX, _1: moveMapY},
 			_evancz$elm_graphics$Collage$group(
 				A2(_elm_lang$core$List$indexedMap, _user$project$Main$drawMapRow, map.tiles)));
 	});
@@ -12179,7 +12179,11 @@ var _user$project$Main$view = function (model) {
 					_user$project$Main$drawMap,
 					model.map,
 					{ctor: '_Tuple2', _0: model.player.x, _1: model.player.y}),
-					_user$project$Main$drawPlayer(model.player)
+					_user$project$Main$drawPlayer(model.player),
+					A2(
+					_evancz$elm_graphics$Collage$filled,
+					_elm_lang$core$Color$white,
+					A2(_evancz$elm_graphics$Collage$rect, 2, 2))
 				])));
 };
 var _user$project$Main$Model = F3(
@@ -12225,9 +12229,9 @@ var _user$project$Main$KeyboardExtraMsg = function (a) {
 	return {ctor: 'KeyboardExtraMsg', _0: a};
 };
 var _user$project$Main$init = function () {
-	var initialPlayerSpeed = 2;
-	var initialPlayerY = 0;
-	var initialPlayerX = 0;
+	var initialPlayerSpeed = 2.0;
+	var initialPlayerY = 0.0;
+	var initialPlayerX = 0.0;
 	var mapHeight = 100;
 	var mapWidth = 100;
 	var _p4 = _ohanhi$keyboard_extra$Keyboard_Extra$init;
@@ -12278,7 +12282,10 @@ var _user$project$Main$update = F2(
 				var y = _p7.y;
 				var newPlayer = _elm_lang$core$Native_Utils.update(
 					oldPlayer,
-					{x: oldPlayer.x + (x * oldPlayer.speed), y: oldPlayer.y + (y * oldPlayer.speed)});
+					{
+						x: oldPlayer.x + (_elm_lang$core$Basics$toFloat(x) * oldPlayer.speed),
+						y: oldPlayer.y + (_elm_lang$core$Basics$toFloat(y) * oldPlayer.speed)
+					});
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
